@@ -1,0 +1,80 @@
+# ─── India Data Sources Configuration ───
+# API endpoints, URLs, timeouts for India-specific providers.
+# Shared providers (NewsAPI, GDELT, etc.) configured via .env.
+
+# ─── Broker API ───
+broker:
+  dhan:
+    base_url: "https://api.dhan.co"
+    timeout_seconds: 10
+    retry_attempts: 3
+  breeze:
+    base_url: "https://api.icicidirect.com/breezeapi/api/v1"
+    timeout_seconds: 10
+    retry_attempts: 3
+  kite:
+    base_url: "https://api.kite.trade"
+    timeout_seconds: 10
+    retry_attempts: 3
+
+# ─── NSE Data ───
+nse:
+  base_url: "https://www.nseindia.com"
+  endpoints:
+    fii_dii: "/api/fiidiiTradeReact"
+    fno_ban: "/api/live-analysis-ban"
+    market_status: "/api/marketStatus"
+    option_chain: "/api/option-chain-indices"
+  headers:
+    User-Agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"
+    Accept: "application/json"
+    Accept-Language: "en-US,en;q=0.9"
+  timeout_seconds: 15
+  retry_attempts: 2
+  # NSE blocks frequent requests — respect rate limits
+  min_request_interval_seconds: 2
+
+# ─── jugaad-data ───
+jugaad:
+  # Python library — no URL config needed
+  # Used for: FII/DII flows, bhavcopy, stock history
+  timeout_seconds: 15
+  retry_attempts: 3
+
+# ─── yfinance (India fallback) ───
+yfinance:
+  timeout_seconds: 10
+  retry_attempts: 2
+  # yfinance is used for:
+  # - Overnight global markets (US, Europe, Asia close)
+  # - Commodity prices
+  # - Currency rates (USD/INR)
+  # - Fallback for Indian stock OHLCV
+
+# ─── RSS Feeds (RBI/SEBI/GOI) ───
+rss_feeds:
+  - name: "RBI Press Releases"
+    url: "https://rbi.org.in/Scripts/BS_PressReleaseDisplay.aspx"
+    type: "scrape"  # RBI doesn't have clean RSS
+  - name: "SEBI Circulars"
+    url: "https://www.sebi.gov.in/sebiweb/home/HomeAction.do?doListing=yes&sid=1&ssid=1&smession=No"
+    type: "scrape"
+  - name: "PIB India"
+    url: "https://pib.gov.in/RSSFeeds/RSSFeedEng.xml"
+    type: "rss"
+  - name: "Moneycontrol"
+    url: "https://www.moneycontrol.com/rss/marketreports.xml"
+    type: "rss"
+  - name: "Economic Times Markets"
+    url: "https://economictimes.indiatimes.com/markets/rssfeeds/1977021501.cms"
+    type: "rss"
+
+# ─── Scheduling ───
+# All times in IST (Asia/Kolkata)
+schedule:
+  overnight_analysis: "08:45"
+  morning_briefing: "09:00"
+  intraday_poll_interval_minutes: 5
+  eod_journal: "18:00"
+  weekly_review: "saturday 10:00"
+  data_pruning: "sunday 02:00"

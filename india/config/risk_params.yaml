@@ -1,0 +1,44 @@
+# ─── India Risk Parameters ───
+# NON-NEGOTIABLE. Code MUST enforce these. No overrides.
+# Loaded at startup, checked before every trade recommendation.
+
+# ─── Per-Trade Limits ───
+max_loss_per_trade_pct: 0.02        # 2% of capital max risk per trade
+max_stop_loss_pct: 0.03             # SL can't be more than 3% from entry
+min_rr_ratio: 2.0                   # Minimum Risk:Reward = 1:2
+max_hold_days: 3                    # Day trading — max 3 day hold
+
+# ─── Position Sizing ───
+max_position_pct: 0.20              # Max 20% of capital in one stock
+max_concurrent_trades: 3            # Max 3 open trades at once
+max_sector_concentration: 0.40      # Max 40% capital in one sector
+max_portfolio_risk_pct: 0.05        # Max 5% total portfolio risk
+
+# ─── Time-Based Rules ───
+no_entry_first_minutes: 15          # No entries in first 15 min (9:15-9:30)
+eod_exit_warning_minutes: 30        # Warn 30 min before close (3:00 PM)
+forced_exit_before_close: true      # Must exit before 3:30 PM
+
+# ─── Volatility Gates ───
+vix_block_long_threshold: 22        # VIX > 22: no long trades (shorts allowed)
+vix_reduce_size_threshold: 18       # VIX 18-22: reduce position to 70%
+vix_reduced_multiplier: 0.70
+
+# ─── Day-of-Week Rules ───
+friday_position_multiplier: 0.50    # Half position size on Fridays (weekend risk)
+monday_gap_caution: true            # Extra gap analysis on Mondays
+
+# ─── Circuit Breakers ───
+daily_loss_limit_pct: 0.03          # Stop trading for the day if loss > 3% of capital
+weekly_loss_limit_pct: 0.05         # Stop trading for the week if loss > 5%
+consecutive_loss_pause: 3           # Pause after 3 consecutive losses — manual review
+
+# ─── Minimum Liquidity ───
+min_avg_volume: 500000              # Min 5-day avg volume (shares)
+min_market_cap_cr: 5000             # Min ₹5,000 crore market cap
+
+# ─── F&O Ban ───
+skip_fno_banned: true               # Don't trade F&O banned stocks
+
+# ─── Earnings Blackout ───
+earnings_blackout_days: 2           # Skip stocks reporting in next 2 days

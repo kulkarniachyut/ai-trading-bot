@@ -1,0 +1,121 @@
+# ─── India System Settings ───
+# Loaded by shared/utils/config.py → load_system_config("india")
+
+system: india
+timezone: Asia/Kolkata
+
+# ─── Market Hours ───
+market:
+  exchange: NSE
+  pre_market_start: "09:00"      # IST — when we start analysis
+  market_open: "09:15"
+  market_close: "15:30"
+  no_entry_window:
+    start: "09:15"
+    end: "09:30"                  # First 15 min: no entries (gap volatility)
+
+# ─── Universe ───
+# Nifty 200 — full list loaded dynamically, these are sector mappings
+universe: nifty_200
+watchlist_source: nse              # Where to get current Nifty 200 constituents
+
+# ─── Sector Map ───
+# Maps sectors to commodity/macro sensitivities
+# Used by correlation engine
+sectors:
+  IT:
+    tickers: [TCS, INFY, WIPRO, HCLTECH, TECHM, LTIM, MPHASIS, COFORGE, PERSISTENT, LTTS]
+    sensitive_to: [usd_inr, us_tech_sentiment]
+    inverse: true                  # Strong rupee = bad for IT exports
+
+  Banking:
+    tickers: [HDFCBANK, ICICIBANK, SBIN, KOTAKBANK, AXISBANK, BANKBARODA, PNB, INDUSINDBK, FEDERALBNK, IDFCFIRSTB]
+    sensitive_to: [rbi_rate, fii_flows, bond_yields]
+
+  Oil_Gas_OMC:
+    tickers: [RELIANCE, ONGC, BPCL, IOC, HINDPETRO, GAIL, PETRONET]
+    sensitive_to: [crude_oil]
+    inverse: true                  # Crude down = good for OMCs
+
+  Pharma:
+    tickers: [SUNPHARMA, DRREDDY, CIPLA, DIVISLAB, APOLLOHOSP, BIOCON, AUROPHARMA, LUPIN, TORNTPHARM, ALKEM]
+    sensitive_to: [usd_inr, us_fda]
+    defensive: true
+
+  Metals:
+    tickers: [TATASTEEL, HINDALCO, JSWSTEEL, VEDL, NMDC, COALINDIA, NATIONALUM, SAIL]
+    sensitive_to: [base_metals, china_demand, crude_oil]
+
+  Auto:
+    tickers: [MARUTI, TATAMOTORS, M&M, BAJAJ-AUTO, HEROMOTOCO, EICHERMOT, ASHOKLEY, BALKRISIND, TVSMOTOR, MOTHERSON]
+    sensitive_to: [crude_oil, steel_prices, rural_demand]
+
+  FMCG:
+    tickers: [HINDUNILVR, ITC, NESTLEIND, BRITANNIA, DABUR, GODREJCP, MARICO, COLPAL, TATACONSUM, VBL]
+    sensitive_to: [rural_demand, crude_oil_packaging]
+    defensive: true
+
+  Realty:
+    tickers: [DLF, GODREJPROP, OBEROIRLTY, PRESTIGE, BRIGADE, SOBHA, PHOENIXLTD]
+    sensitive_to: [rbi_rate, cement_prices]
+    rate_sensitive: true
+
+  Cement:
+    tickers: [ULTRACEMCO, SHREECEM, AMBUJACEM, ACC, DALMIASUGAR, RAMCOCEM, JKCEMENT]
+    sensitive_to: [crude_oil, infra_spending]
+
+  Power:
+    tickers: [NTPC, POWERGRID, TATAPOWER, ADANIGREEN, JSW_ENERGY, NHPC, SJVN]
+    sensitive_to: [coal_prices, monsoon, policy]
+
+# ─── Overnight Global Markets to Track ───
+overnight_markets:
+  us:
+    - {ticker: "^GSPC", name: "S&P 500"}
+    - {ticker: "^IXIC", name: "NASDAQ"}
+    - {ticker: "^DJI", name: "Dow Jones"}
+  europe:
+    - {ticker: "^FTSE", name: "FTSE 100"}
+    - {ticker: "^GDAXI", name: "DAX"}
+  asia:
+    - {ticker: "^N225", name: "Nikkei 225"}
+    - {ticker: "^HSI", name: "Hang Seng"}
+    - {ticker: "000001.SS", name: "Shanghai Composite"}
+
+# ─── Commodities to Track ───
+commodities:
+  - {ticker: "CL=F", name: "WTI Crude", alias: "crude_oil"}
+  - {ticker: "BZ=F", name: "Brent Crude", alias: "brent_crude"}
+  - {ticker: "GC=F", name: "Gold", alias: "gold"}
+  - {ticker: "SI=F", name: "Silver", alias: "silver"}
+  - {ticker: "HG=F", name: "Copper", alias: "copper"}
+  - {ticker: "NG=F", name: "Natural Gas", alias: "natural_gas"}
+
+# ─── Currency Pairs ───
+currencies:
+  - {ticker: "USDINR=X", name: "USD/INR"}
+
+# ─── Gift Nifty / SGX Nifty ───
+gift_nifty:
+  ticker: "^NSEI"                  # Fallback — actual GIFT Nifty via broker API
+  name: "GIFT Nifty"
+
+# ─── India VIX ───
+vix:
+  ticker: "^INDIAVIX"
+  high_threshold: 22               # VIX > 22: no long trades
+  elevated_threshold: 18           # VIX 18-22: reduce position sizes
+
+# ─── Scoring Weights ───
+# Initial weights — auto-tuned weekly based on signal accuracy
+scoring:
+  technical_weight: 0.55
+  macro_weight: 0.30
+  fundamental_weight: 0.15
+  min_composite_score: 70           # Below this = no trade
+
+# ─── Position Sizing ───
+position:
+  max_trades_per_day: 3
+  max_position_pct: 0.20            # Max 20% of capital per trade
+  friday_position_multiplier: 0.50  # Half size on Fridays

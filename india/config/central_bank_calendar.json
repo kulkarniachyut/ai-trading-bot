@@ -1,0 +1,99 @@
+{
+  "_comment": "Central bank events relevant to Indian markets. Updated quarterly.",
+  "_last_updated": "2026-03-07",
+
+  "rbi": {
+    "name": "Reserve Bank of India",
+    "currency_impact": "INR",
+    "events": [
+      {
+        "type": "mpc_meeting",
+        "description": "Monetary Policy Committee — rate decision",
+        "dates_2026": ["2026-04-09", "2026-06-06", "2026-08-08", "2026-10-09", "2026-12-05"],
+        "impact": "high",
+        "affected_sectors": ["Banking", "Realty", "Auto", "NBFC"]
+      },
+      {
+        "type": "monetary_policy_statement",
+        "description": "Bi-monthly monetary policy statement",
+        "dates_2026": ["2026-04-09", "2026-06-06", "2026-08-08", "2026-10-09", "2026-12-05"],
+        "impact": "high",
+        "affected_sectors": ["Banking", "Realty", "NBFC"]
+      }
+    ]
+  },
+
+  "fed": {
+    "name": "US Federal Reserve",
+    "currency_impact": "USD",
+    "relevance_to_india": "DXY movement, FII flows, IT/pharma export sentiment",
+    "events": [
+      {
+        "type": "fomc_meeting",
+        "description": "Federal Open Market Committee — rate decision",
+        "dates_2026": ["2026-03-19", "2026-05-07", "2026-06-18", "2026-07-30", "2026-09-17", "2026-11-05", "2026-12-17"],
+        "impact": "high",
+        "affected_sectors": ["IT", "Pharma", "Banking"]
+      },
+      {
+        "type": "fomc_minutes",
+        "description": "FOMC meeting minutes release (3 weeks after meeting)",
+        "dates_2026": ["2026-04-09", "2026-05-28", "2026-07-09", "2026-08-20", "2026-10-08", "2026-11-26"],
+        "impact": "medium",
+        "affected_sectors": ["IT", "Banking"]
+      },
+      {
+        "type": "jackson_hole",
+        "description": "Jackson Hole Symposium — annual Fed speech",
+        "dates_2026": ["2026-08-27"],
+        "impact": "high",
+        "affected_sectors": ["All"]
+      }
+    ]
+  },
+
+  "ecb": {
+    "name": "European Central Bank",
+    "currency_impact": "EUR",
+    "relevance_to_india": "Global risk sentiment, European FII flows",
+    "events": [
+      {
+        "type": "rate_decision",
+        "description": "ECB interest rate decision",
+        "dates_2026": ["2026-03-06", "2026-04-17", "2026-06-05", "2026-07-17", "2026-09-11", "2026-10-30", "2026-12-18"],
+        "impact": "medium",
+        "affected_sectors": ["Banking", "IT"]
+      }
+    ]
+  },
+
+  "boj": {
+    "name": "Bank of Japan",
+    "currency_impact": "JPY",
+    "relevance_to_india": "Carry trade unwind risk, Asian market sentiment",
+    "events": [
+      {
+        "type": "rate_decision",
+        "description": "BOJ monetary policy decision",
+        "dates_2026": ["2026-03-14", "2026-04-25", "2026-06-13", "2026-07-31", "2026-09-18", "2026-10-30", "2026-12-18"],
+        "impact": "low",
+        "affected_sectors": ["Metals", "IT"]
+      }
+    ]
+  },
+
+  "pboc": {
+    "name": "People's Bank of China",
+    "currency_impact": "CNY",
+    "relevance_to_india": "Metal prices, competitive exports, Asian sentiment",
+    "events": [
+      {
+        "type": "lpr_fixing",
+        "description": "Loan Prime Rate fixing (monthly, 20th)",
+        "frequency": "monthly_20th",
+        "impact": "medium",
+        "affected_sectors": ["Metals", "Auto"]
+      }
+    ]
+  }
+}
