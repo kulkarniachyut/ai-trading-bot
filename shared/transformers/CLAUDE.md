@@ -1,5 +1,7 @@
 # shared/transformers/ — Data Normalization
 
+**Status:** Pending — Step 3
+
 Transforms raw provider data into typed standard schemas.
 
 ## Rules

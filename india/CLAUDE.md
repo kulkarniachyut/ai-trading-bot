@@ -2,6 +2,21 @@
 
 Fully independent trading intelligence system for Indian equity markets.
 
+## Built Modules
+
+| Module | Path | Status |
+|--------|------|--------|
+| Config: settings | `config/settings.yaml` | ✅ Nifty 200 universe, 10 sectors, overnight markets, commodities |
+| Config: risk params | `config/risk_params.yaml` | ✅ All risk rules (non-negotiable) |
+| Config: sources | `config/sources.yaml` | ✅ Broker, NSE, RSS endpoints, schedule |
+| Config: CB calendar | `config/central_bank_calendar.json` | ✅ RBI, Fed, ECB, BOJ, PBOC 2026 dates |
+| Broker adapter | `providers/` | Pending — Step 4 |
+| Ingestion | `ingestion/` | Pending — Steps 5-6 |
+| Analysis | `analysis/` | Pending — Step 7 |
+| Strategy | `strategy/` | Pending — Step 8 |
+| Delivery | `delivery/` | Pending — Step 9 |
+| Review | `review/` | Pending — Step 10 |
+
 ## Market Info
 - Exchange: NSE (primary), BSE (secondary)
 - Universe: Nifty 200

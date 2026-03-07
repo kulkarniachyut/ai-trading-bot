@@ -33,4 +33,5 @@ Fully independent trading intelligence system for US equity markets.
 - US system will be built AFTER India system is live and stable.
 
 ## Status
-Not yet built. Design pending. Will follow same architecture as India system.
+Not yet built. Will start after India system is live and stable (Steps 13-19).
+Architecture mirrors India system with different providers and timing.

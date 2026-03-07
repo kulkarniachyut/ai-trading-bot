@@ -1,5 +1,7 @@
 # shared/providers/ — Vendor API Clients
 
+**Status:** Pending — Step 3
+
 Raw API wrappers for external data sources used by both India and US systems.
 
 ## Rules

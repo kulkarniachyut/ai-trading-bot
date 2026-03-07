@@ -9,6 +9,25 @@ Two independent day trading intelligence systems (India NSE/BSE + US Robinhood) 
 
 Read `docs/tech-design-v1.md` for full HLD, system design, DB schema, data models, API contracts.
 
+## Build Progress
+
+| Step | Scope | Status |
+|------|-------|--------|
+| 1 | Shared foundation — config, logger, DB, India configs | ✅ Done |
+| 2 | Shared Telegram bot | Pending |
+| 3 | Shared providers (yfinance, NewsAPI, GDELT, Reddit, LLM) | Pending |
+| 4 | India broker adapter + config | Pending |
+| 5 | India ingestion — overnight, commodities, FII/DII | Pending |
+| 6 | India ingestion — geopolitics, earnings, central banks | Pending |
+| 7 | India analysis — technical, fundamental, macro, risk | Pending |
+| 8 | India strategy — screener, ranker, trade plan | Pending |
+| 9 | India delivery — Telegram formatter + pipeline | Pending |
+| 10 | India review — journal, KPIs, weekly review | Pending |
+| 11 | India scheduler + main.py | Pending |
+| 12 | India end-to-end testing | Pending |
+| 13-19 | US system (mirrors India architecture) | Planned |
+| 20 | Docker deployment | Planned |
+
 ## Hard Rules
 
 - ALL env vars through `shared/utils/config.py`. No inline `os.getenv()` anywhere.

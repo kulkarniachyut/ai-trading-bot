@@ -1,5 +1,7 @@
 # shared/delivery/ — Telegram Bot & Base Formatting
 
+**Status:** Pending — Step 2 (next)
+
 Shared Telegram infrastructure. One bot serves both India and US systems, routing to different chat IDs.
 
 ## Rules
