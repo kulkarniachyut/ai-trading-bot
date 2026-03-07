@@ -1,0 +1,15 @@
+{
+  "project": "ai-trading-bot",
+  "description": "Two-market day trading intelligence system (India NSE/BSE + US Robinhood)",
+  "context_files": [
+    "CLAUDE.md",
+    "docs/tech-design-v1.md"
+  ],
+  "conventions": {
+    "language": "python",
+    "version": "3.11",
+    "style": "async-first",
+    "testing": "pytest",
+    "logging": "loguru"
+  }
+}
