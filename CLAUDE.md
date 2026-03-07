@@ -39,6 +39,7 @@ Read `docs/tech-design-v1.md` for full HLD, system design, DB schema, data model
 - Logging: structured via loguru. No `print()`. Log every API call, fallback, and decision.
 - No wildcard imports. Explicit only.
 - No magic numbers in code. All thresholds, weights, limits in config YAML.
+- Every step/commit MUST be tested end-to-end before marking complete. Unit tests alone are insufficient — write integration tests that exercise the full path from config → DB init → module init → operation → DB verification.
 
 ## Vendor Abstraction
 
@@ -73,6 +74,8 @@ Read `docs/tech-design-v1.md` for full HLD, system design, DB schema, data model
 
 - Test files mirror source: `india/ingestion/fii_dii.py` → `tests/india/test_fii_dii.py`
 - Each module must be testable standalone (no dependency on full pipeline running).
+- Integration tests required: every step must have tests that wire up real components (config loader, DB, module under test) end-to-end with only external APIs mocked.
+- No step is marked complete until `pytest tests/` passes with all unit AND integration tests green.
 
 ## Memory & Evolution
 
