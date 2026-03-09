@@ -9,8 +9,9 @@ aiosqlite==0.21.0
 
 # ─── Data & Analysis ───
 pandas==2.2.3
-pandas-ta==0.3.14b
-numpy==2.2.3
+# pandas-ta==0.4.71b0 - removed due to incompatibility with python 3.11
+# numpy==2.2.3
+numpy>=1.26,<2.0
 
 # ─── Scheduling ───
 apscheduler==3.11.0
@@ -25,14 +26,18 @@ loguru==0.7.3
 anthropic==0.49.0
 
 # ─── Data Providers ───
-yfinance==0.2.54
+yfinance==0.1.63
 praw==7.8.1
 feedparser==6.0.11
 gdeltdoc==1.5.0
 
 # ─── India-specific ───
-jugaad-data==0.24
+jugaad-data==0.24 
 
 # ─── US-specific (install when US system is built) ───
 # polygon-api-client==1.14.0
 # robin-stocks==3.0.6
+
+# ─── Testing ───
+pytest>=8,<9
+pytest-asyncio==0.25.3

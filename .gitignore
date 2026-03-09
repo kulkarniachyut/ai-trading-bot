@@ -33,3 +33,5 @@ Thumbs.db
 
 # Docker
 *.pid
+.claude/worktrees/*
+.claude/worktrees/
