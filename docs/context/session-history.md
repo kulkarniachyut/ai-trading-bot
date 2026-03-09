@@ -6,9 +6,9 @@ This file captures the build history and key decisions. Read this at the start o
 
 ## Current State
 
-**Last completed step:** Step 2 (Shared Telegram Bot)
-**Next step:** Step 3 (Shared Providers)
-**Active branch:** `feature/shared-02-telegram` (pending merge to main)
+**Last completed step:** Step 3 (Shared Providers + Transformers)
+**Next step:** Step 4 (India Broker Adapter)
+**Active branch:** `feature/shared-03-providers` (pending merge to main)
 
 ## Completed Steps
 
@@ -20,6 +20,30 @@ This file captures the build history and key decisions. Read this at the start o
   - `get_logger(__name__)` → loguru with structured helpers
   - `init_db()` → creates 6 tables idempotently, `get_db()` context manager
   - All env vars through `shared/utils/config.py` only
+
+### Step 3: Shared Providers + Transformers (✅ Complete, pending PR merge)
+- **Branch:** `feature/shared-03-providers`
+- **Commit:** `0f79f87`
+- **What was built:**
+  - 7 providers: yfinance, newsapi, gdelt, reddit, llm (Anthropic), fred, rss
+  - 3 transformer files: `market_transformer.py`, `news_transformer.py`, `base.py` (dataclasses)
+  - Output dataclasses: `MarketSnapshot`, `CommoditySnapshot`, `GeoSignal`, `IngestionResult`
+- **Tests:** 57 new (40 unit + 17 integration), 103 total passing
+- **Key patterns established:**
+  - `ProviderResult` uniform return type — `success, data, provider, latency_ms, error, metadata`
+  - `make_error_result()` helper for exception handling
+  - yfinance/PRAW/feedparser run sync in `run_in_executor` — no async API
+  - `MarketTransformer` handles both market indices + commodities; lookup maps drive display name + affected sectors
+  - `NewsTransformer` dispatches by `source` string — add new sources without changing interface
+  - Sentiment inferred from keyword matching (no LLM needed at transformer layer)
+- **Config gotchas:**
+  - `LLMConfig` has no `llm_model` field — model hardcoded in provider
+  - `AppConfig` requires `risk: RiskConfig` + `root_dir: Path` fields
+  - `IndiaBrokerConfig` uses `broker` not `broker_name`, `api_secret` not `client_id`
+- **Lessons:**
+  - Read config dataclass fields before writing tests — field names differ from what you'd guess
+  - feedparser never raises — check `bozo` flag + empty entries
+  - Python 3.14 pytest-asyncio deprecation warnings are harmless
 
 ### Step 2: Shared Telegram Bot (✅ Complete, pending PR merge)
 - **Branch:** `feature/shared-02-telegram`
