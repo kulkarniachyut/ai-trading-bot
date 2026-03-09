@@ -1,13 +1,13 @@
 # Step 3: Shared Providers (yfinance, NewsAPI, GDELT, Reddit, LLM)
 
-**Status:** Pending
-**Branch:** `feature/shared-03-providers`
+**Status:** ✅ Done
+**Branch:** `feature/shared-03-providers` → merged to `main`
 
 ## Objective
 
 Build the shared provider layer — vendor-specific API clients that return raw data. These are the lowest layer of the data pipeline, used by both India and US ingestion modules.
 
-## Providers to Build
+## Providers Built
 
 | Provider | File | APIs Used | Cost |
 |----------|------|-----------|------|
@@ -15,9 +15,17 @@ Build the shared provider layer — vendor-specific API clients that return raw 
 | NewsAPI | `shared/providers/newsapi_provider.py` | newsapi.org REST API | Free tier (100/day) |
 | GDELT | `shared/providers/gdelt_provider.py` | GDELT 2.0 API | Free |
 | Reddit | `shared/providers/reddit_provider.py` | PRAW (Reddit API) | Free |
-| LLM | `shared/providers/llm_provider.py` | Anthropic / OpenAI API | Pay-per-use |
+| LLM | `shared/providers/llm_provider.py` | Anthropic API (claude-3-haiku) | Pay-per-use |
 | FRED | `shared/providers/fred_provider.py` | FRED REST API | Free |
 | RSS | `shared/providers/rss_provider.py` | feedparser | Free |
+
+## Transformers Built
+
+| Transformer | File | Input → Output |
+|-------------|------|----------------|
+| MarketTransformer | `shared/transformers/market_transformer.py` | yfinance raw → MarketSnapshot, CommoditySnapshot |
+| NewsTransformer | `shared/transformers/news_transformer.py` | NewsAPI/GDELT/Reddit/RSS raw → GeoSignal |
+| Base dataclasses | `shared/transformers/base.py` | MarketSnapshot, CommoditySnapshot, GeoSignal, IngestionResult |
 
 ## Architecture
 
@@ -26,11 +34,10 @@ Each provider follows the standard contract:
 ```python
 class SomeProvider:
     async def fetch_something(self, params...) -> ProviderResult:
-        # MUST use httpx with timeout (max 15s)
-        # MUST be wrapped in tenacity retry
-        # MUST return ProviderResult (never raise to caller)
-        # MUST log the call via shared logger
-        # Returns raw API data — no normalization
+        # httpx with timeout=15s
+        # tenacity @retry(stop_after_attempt(3), wait_exponential)
+        # returns ProviderResult — never raises
+        # logs via log_api_call()
 ```
 
 ### ProviderResult dataclass
@@ -38,38 +45,55 @@ class SomeProvider:
 @dataclass
 class ProviderResult:
     success: bool
-    data: Any              # Raw API response
-    provider: str          # Provider name for logging
-    latency_ms: int        # Call duration
-    error: str | None      # Error message if failed
-    metadata: dict | None  # Rate limits, etc.
+    data: Any
+    provider: str
+    latency_ms: int
+    error: str | None
+    metadata: dict | None
 ```
 
-## Key Constraints
+## Key Decisions
 
-- Providers ONLY return raw data. No business logic, no normalization.
-- Every call logged: provider name, latency_ms, status, data_points.
-- All API keys from `shared/utils/config.py` — no `os.getenv()`.
-- httpx with 15s timeout + tenacity retry on every call.
-- Rate limit awareness: respect provider limits, log when approaching.
+- **LLM backend:** Anthropic (claude-3-haiku-20240307) — fast + cheap for enrichment
+- **LLMConfig has no `llm_model` field** — model is hardcoded to `_DEFAULT_MODEL` in provider
+- **yfinance/Reddit/RSS run sync in executor** — they have no async API
+- **No llm_transformer** — LLM output is plain text, parsed by ingestion layer per use case
+- **All output dataclasses in `shared/transformers/base.py`** — single source of truth
 
-## Testing
+## Files Created (15 total)
 
-- Unit tests: mock httpx responses, verify ProviderResult fields
-- Integration tests: wire up real config → provider init → mock HTTP → verify end-to-end
-- Test fallback behavior (provider returns error → ProviderResult.success=False)
+```
+shared/providers/
+  base.py                  # ProviderResult + make_error_result
+  yfinance_provider.py
+  newsapi_provider.py
+  gdelt_provider.py
+  reddit_provider.py
+  llm_provider.py
+  fred_provider.py
+  rss_provider.py
+  __init__.py
+shared/transformers/
+  base.py                  # MarketSnapshot, CommoditySnapshot, GeoSignal, IngestionResult
+  market_transformer.py
+  news_transformer.py
+  __init__.py
+tests/shared/
+  test_providers.py            # 40 unit tests
+  test_providers_integration.py # 17 integration tests
+```
 
-## Files to Create
+## Test Results
 
-| File | Description |
-|------|-------------|
-| `shared/providers/__init__.py` | Package + ProviderResult dataclass |
-| `shared/providers/yfinance_provider.py` | Market data, commodities, fundamentals |
-| `shared/providers/newsapi_provider.py` | News search by topic/keyword |
-| `shared/providers/gdelt_provider.py` | Geopolitical event monitoring |
-| `shared/providers/reddit_provider.py` | Subreddit sentiment (r/IndianStreetBets, r/wallstreetbets) |
-| `shared/providers/llm_provider.py` | LLM summarization and sentiment analysis |
-| `shared/providers/fred_provider.py` | Federal Reserve economic data |
-| `shared/providers/rss_provider.py` | RSS feed parsing (RBI, SEBI, Fed) |
-| `tests/shared/test_providers.py` | Unit tests |
-| `tests/shared/test_providers_integration.py` | Integration tests |
+```
+103 passed (40 unit + 17 integration + 41 telegram unit + 5 telegram integration)
+```
+
+All integration tests wire: AppConfig → Provider(config) → mocked external API → ProviderResult → Transformer → dataclass verification.
+
+## Lessons Learned
+
+1. **Always read actual config dataclass fields before writing tests** — `LLMConfig` had no `llm_model`, `IndiaBrokerConfig` used `broker` not `broker_name`, `AppConfig` required `risk` + `root_dir` fields that weren't obvious.
+2. **yfinance runs sync** — must use `asyncio.get_event_loop().run_in_executor()` — same for PRAW and feedparser.
+3. **feedparser never raises** — check `bozo` flag + empty entries instead.
+4. **Python 3.14 deprecation warnings** from pytest-asyncio about `asyncio.get_event_loop_policy` — harmless, not our code.

@@ -22,7 +22,7 @@ Two independent day trading intelligence systems (India NSE/BSE + US Robinhood) 
 |------|-------|------|--------|
 | 1 | Shared foundation — config, logger, DB, India configs | `docs/plans/step-01-shared-foundation.md` | ✅ Done |
 | 2 | Shared Telegram bot | `docs/plans/step-02-shared-telegram.md` | ✅ Done |
-| 3 | Shared providers (yfinance, NewsAPI, GDELT, Reddit, LLM) | `docs/plans/step-03-shared-providers.md` | Pending |
+| 3 | Shared providers (yfinance, NewsAPI, GDELT, Reddit, LLM) | `docs/plans/step-03-shared-providers.md` | ✅ Done |
 | 4 | India broker adapter + config | `docs/plans/step-04-india-broker.md` | Pending |
 | 5 | India ingestion — overnight, commodities, FII/DII | `docs/plans/step-05-india-ingestion-overnight.md` | Pending |
 | 6 | India ingestion — geopolitics, earnings, central banks | `docs/plans/step-06-india-ingestion-intelligence.md` | Pending |
